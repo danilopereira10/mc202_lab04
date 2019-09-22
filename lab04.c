@@ -26,22 +26,22 @@ int main() {
 	//char matriz[m][n];
 	char** matriz;
 	char* linha;
-	matriz = malloc(m * n * sizeof(char));
-	for (int i = 0; i < m * n; i++) {
+	matriz = malloc(m * sizeof(linha));
+	for (int i = 0; i < m; i++) {
 		linha = malloc(n * sizeof(char));
 		for (int j = 0; j < n; j++) {
 			scanf("%c", &linha[j]);		
 		}
-		matriz[i] = linha;	
+		matriz[i] = linha;
+		printf(linha);
+		printf("\n");	
 	}
-	//
-	printf("wow");
+
 
 	
-	imprimeMatriz(m, n, matriz);
+	//imprimeMatriz(m, n, matriz);
 
 
 	return EXIT_SUCCESS;
 }
-
 
