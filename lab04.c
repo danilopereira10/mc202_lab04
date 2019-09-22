@@ -9,8 +9,8 @@ int chegouAoFimDaLinha(int i, int n) {
 }
 
 void imprimeMatriz(int m, int n, char** matriz) {
-	for (int i = 0; i < m; i++) {
-		printf(matriz[i]);	
+	for (int i = 0; i < 2; i++) {
+		printf("%s", matriz[i]);	
 		printf("\n");
 	}
 }
@@ -25,20 +25,20 @@ int main() {
 	//char direction4;
 	//char matriz[m][n];
 	char** matriz;
-	char* linha;
+	//char discard = ' ';
 
-	matriz = malloc(m * sizeof(linha));
-	for (int i = 0; i < m; i++) {
-		linha = malloc(n * sizeof(char));
+	matriz = malloc(m * sizeof(char *));
+	for (int i = 0; i < 2; i++) {
+		matriz[i] = malloc(n * sizeof(char));
 		for (int j = 0; j < n; j++) {
-			scanf("%c", &linha[j]);
+			//scanf("%c", &discard);
+			scanf("%c", &matriz[i][j]);
 			if (j == n - 1) {
-							
-			}		
+				//scanf("%c", &discard);		
+			} 		
 		}
-		matriz[i] = linha;
-		printf(linha);
-		printf("\n");	
+		printf("%s", matriz[i]);
+		printf("\n");
 	}
 
 
