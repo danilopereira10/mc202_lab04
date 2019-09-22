@@ -35,6 +35,7 @@ int main() {
 		matriz[i] = linha;	
 	}
 	//
+	printf("wow");
 
 	
 	imprimeMatriz(m, n, matriz);
