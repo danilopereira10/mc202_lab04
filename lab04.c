@@ -16,7 +16,7 @@ int main() {
 	//char direction2;
 	//char direction3;
 	//char direction4;
-	//char matriz[m][n];
+	char matriz[m][n];
 	for (int i = 0; i < m; i++) {
 		for (int j = 0; j < n; j++) {
 			scanf("%c", &matriz[i][j]);		
