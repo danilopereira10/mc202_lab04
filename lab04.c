@@ -34,7 +34,7 @@ int main() {
 		}
 		matriz[i] = linha;	
 	}
-
+	//
 
 	
 	imprimeMatriz(m, n, matriz);
