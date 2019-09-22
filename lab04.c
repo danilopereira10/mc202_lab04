@@ -1,7 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void imprimeMatriz(int m, int n, char matriz[][n]) {
+int chegouAoFimDaLinha(int i, int n) {
+	if (i % (n - 1) == 0) {
+		return 1;	
+	}
+	return 0;
+}
+
+void imprimeMatriz(int m, int n, char** matriz) {
 	for (int i = 0; i < m; i++) {
 		printf(matriz[i]);	
 		printf("\n");
@@ -16,18 +23,30 @@ int main() {
 	//char direction2;
 	//char direction3;
 	//char direction4;
-	char matriz[m][n];
+	//char matriz[m][n];
+	char** matriz;
+	char* linha;
+
+	matriz = malloc(m * sizeof(linha));
 	for (int i = 0; i < m; i++) {
+		linha = malloc(n * sizeof(char));
 		for (int j = 0; j < n; j++) {
-			scanf("%c", &matriz[i][j]);		
+			scanf("%c", &linha[j]);
+			if (j == n - 1) {
+							
+			}		
 		}
+		matriz[i] = linha;
+		printf(linha);
+		printf("\n");	
 	}
 
 
-
-	imprimeMatriz(m, n, matriz);
+	
+	//imprimeMatriz(m, n, matriz);
 
 
 	return EXIT_SUCCESS;
 }
+
 
