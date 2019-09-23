@@ -9,7 +9,7 @@ int chegouAoFimDaLinha(int i, int n) {
 }
 
 void imprimeMatriz(int m, int n, char** matriz) {
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < m; i++) {
 		printf("%s", matriz[i]);	
 		printf("\n");
 	}
@@ -25,25 +25,21 @@ int main() {
 	//char direction4;
 	//char matriz[m][n];
 	char** matriz;
-	//char discard = ' ';
-
+	char discardHashN = ' ';
 	matriz = malloc(m * sizeof(char *));
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < m; i++) {
 		matriz[i] = malloc(n * sizeof(char));
 		for (int j = 0; j < n; j++) {
-			//scanf("%c", &discard);
-			scanf("%c", &matriz[i][j]);
-			if (j == n - 1) {
-				//scanf("%c", &discard);		
-			} 		
+			if (j == 0) {
+				scanf("%c", &discardHashN);			
+			}
+			scanf("%c", &matriz[i][j]);	
 		}
-		printf("%s", matriz[i]);
-		printf("\n");
 	}
 
 
 	
-	//imprimeMatriz(m, n, matriz);
+	imprimeMatriz(m, n, matriz);
 
 
 	return EXIT_SUCCESS;
