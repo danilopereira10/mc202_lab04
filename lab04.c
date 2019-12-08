@@ -6,8 +6,8 @@
 #define PARA_ESQUERDA '3'
 #define PARA_CIMA '4'
 #define MATOU_O_MINOTAURO 1
-#define AINDA_NAO_CONSEGUIU_ESPADA 'N'
-#define JA_CONSEGUIU_ESPADA 'Y'
+#define NAO 'N'
+#define SIM 'Y'
 #define PERDEU 0
 #define Y_ENTRADA 0
 /* int chegouAoFimDaLinha(int i, int n) {
@@ -28,15 +28,18 @@ char** M; // matriz
 int**  posicao_visitada;
 
 int m, n;
+char conseguiu_espada;
+char direcao;
+int linha, coluna;
 
-int resolve_possibilidades_de_matar_minotauro(int linha, int coluna, char direcao, char conseguiu_espada);
-int resolve_minotauro(int linha, int coluna, char direcao, char conseguiu_espada);
+int resolve_possibilidades_de_matar_minotauro(int linha, int coluna, char direcao);
+int resolve_minotauro(int linha, int coluna, char direcao);
 
-int resolve_possibilidades_de_matar_minotauro(int linha, int coluna, char direcao, char conseguiu_espada) {
+int resolve_possibilidades_de_matar_minotauro(int linha, int coluna, char direcao) {
 	if (direcao == PARA_DIREITA) {
-		if (!resolve_minotauro(linha, coluna + 1, PARA_DIREITA, conseguiu_espada)) {
-			if (!resolve_minotauro(linha + 1, coluna, PARA_BAIXO, conseguiu_espada)) {
-				return resolve_minotauro(linha - 1, coluna, PARA_CIMA, conseguiu_espada);
+		if (!resolve_minotauro(linha, coluna + 1, PARA_DIREITA)) {
+			if (!resolve_minotauro(linha + 1, coluna, PARA_BAIXO)) {
+				return resolve_minotauro(linha - 1, coluna, PARA_CIMA);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -44,9 +47,9 @@ int resolve_possibilidades_de_matar_minotauro(int linha, int coluna, char direca
 			return MATOU_O_MINOTAURO;
 		}
 	} else if (direcao == PARA_BAIXO) {
-		if (!resolve_minotauro(linha, coluna + 1, PARA_DIREITA, conseguiu_espada)) {
-			if(!resolve_minotauro(linha + 1, coluna, PARA_BAIXO, conseguiu_espada)) {
-				return resolve_minotauro(linha, coluna - 1, PARA_ESQUERDA, conseguiu_espada);
+		if (!resolve_minotauro(linha, coluna + 1, PARA_DIREITA)) {
+			if(!resolve_minotauro(linha + 1, coluna, PARA_BAIXO)) {
+				return resolve_minotauro(linha, coluna - 1, PARA_ESQUERDA);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -54,9 +57,9 @@ int resolve_possibilidades_de_matar_minotauro(int linha, int coluna, char direca
 			return MATOU_O_MINOTAURO;
 		}
 	} else if (direcao == PARA_ESQUERDA) {
-		if (!resolve_minotauro(linha + 1, coluna, PARA_BAIXO, conseguiu_espada)) {
-			if (!resolve_minotauro(linha, coluna - 1, PARA_ESQUERDA, conseguiu_espada)) {
-				return resolve_minotauro(linha - 1, coluna, PARA_CIMA, conseguiu_espada);
+		if (!resolve_minotauro(linha + 1, coluna, PARA_BAIXO)) {
+			if (!resolve_minotauro(linha, coluna - 1, PARA_ESQUERDA)) {
+				return resolve_minotauro(linha - 1, coluna, PARA_CIMA);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -64,9 +67,9 @@ int resolve_possibilidades_de_matar_minotauro(int linha, int coluna, char direca
 			return MATOU_O_MINOTAURO;
 		}
 	} else {
-		if (!resolve_minotauro(linha, coluna + 1, PARA_DIREITA, conseguiu_espada)) {
-			if (!resolve_minotauro(linha, coluna - 1, PARA_ESQUERDA, conseguiu_espada)) {
-				return resolve_minotauro(linha - 1, coluna, PARA_CIMA, conseguiu_espada);
+		if (!resolve_minotauro(linha, coluna + 1, PARA_DIREITA)) {
+			if (!resolve_minotauro(linha, coluna - 1, PARA_ESQUERDA)) {
+				return resolve_minotauro(linha - 1, coluna, PARA_CIMA);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -102,7 +105,7 @@ void reinicializar_vetor_visitados() {
 	}
 }
 
-int resolve_minotauro(int linha, int coluna, char direcao, char conseguiu_espada) {
+int resolve_minotauro(int linha, int coluna, char direcao) {
 	if (linha >= m || coluna >= n || linha < 0 || coluna < 0) {
 		return PERDEU;
 	}
@@ -114,20 +117,21 @@ int resolve_minotauro(int linha, int coluna, char direcao, char conseguiu_espada
 
 	posicao_visitada[linha][coluna] = 1;
 	
-	if (M[linha][coluna] == 'M' && conseguiu_espada == 'Y') {
+	if (M[linha][coluna] == 'M' && conseguiu_espada == SIM) {
 		return MATOU_O_MINOTAURO;
 	} 
 	
-	if (M[linha][coluna] == 'M' && conseguiu_espada == 'N') {
+	if (M[linha][coluna] == 'M' && conseguiu_espada == NAO) {
 		return PERDEU;
 	} 
 	
 	if (M[linha][coluna] == 'S') {
 		reinicializar_vetor_visitados();
-		return resolve_possibilidades_de_matar_minotauro(linha, coluna, direcao, JA_CONSEGUIU_ESPADA);
+		conseguiu_espada = SIM;
+		return resolve_possibilidades_de_matar_minotauro(linha, coluna, direcao);
 	} 
 	
-	if (resolve_possibilidades_de_matar_minotauro(linha, coluna, direcao, conseguiu_espada)) {
+	if (resolve_possibilidades_de_matar_minotauro(linha, coluna, direcao)) {
 		M[linha][coluna] = '*';
 		return MATOU_O_MINOTAURO;
 	}
@@ -136,11 +140,12 @@ int resolve_minotauro(int linha, int coluna, char direcao, char conseguiu_espada
 }
 
 int comecar_resolucao (int linha, int coluna) {
-	//M[linha][coluna] = '*';
-	if (!resolve_minotauro(linha, coluna + 1, PARA_DIREITA, AINDA_NAO_CONSEGUIU_ESPADA)) {
-		if (!resolve_minotauro(linha + 1, coluna, PARA_BAIXO, AINDA_NAO_CONSEGUIU_ESPADA)) {
-			if (!resolve_minotauro(linha, coluna - 1, PARA_ESQUERDA, AINDA_NAO_CONSEGUIU_ESPADA)) {
-				return resolve_minotauro(linha - 1, coluna, PARA_CIMA, AINDA_NAO_CONSEGUIU_ESPADA);
+	M[linha][coluna] = '*';
+	conseguiu_espada = NAO;
+	if (!resolve_minotauro(linha, coluna + 1, PARA_DIREITA)) {
+		if (!resolve_minotauro(linha + 1, coluna, PARA_BAIXO)) {
+			if (!resolve_minotauro(linha, coluna - 1, PARA_ESQUERDA)) {
+				return resolve_minotauro(linha - 1, coluna, PARA_CIMA);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
