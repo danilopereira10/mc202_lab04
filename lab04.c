@@ -30,27 +30,20 @@ int**  posicao_visitada;
 int m, n;
 char conseguiu_espada;
 char direcao;
-int linha;
+//int linha;
 //int coluna;
 
-int resolve_possibilidades_de_matar_minotauro(int coluna);
-int resolve_minotauro(int coluna);
+int resolve_possibilidades_de_matar_minotauro(int linha, int coluna);
+int resolve_minotauro(int linha, int coluna);
 
-int resolve_possibilidades_de_matar_minotauro(int coluna) {
+int resolve_possibilidades_de_matar_minotauro(int linha, int coluna) {
 	if (direcao == PARA_DIREITA) {
-		if (!resolve_minotauro(coluna + 1)) {
+		if (!resolve_minotauro(linha, coluna + 1)) {
 			direcao = PARA_BAIXO;
-			linha = linha + 1;
-			if (!resolve_minotauro(coluna)) {
+			if (!resolve_minotauro(linha + 1, coluna)) {
 				direcao = PARA_CIMA;
-				linha = linha - 2;
-				if (resolve_minotauro(coluna)) {
-					linha = linha + 1;
-					return MATOU_O_MINOTAURO;
-				}
-				return PERDEU;
+				return resolve_minotauro(linha - 1, coluna);
 			} else {
-				linha = linha - 1;
 				return MATOU_O_MINOTAURO;
 			}
 		} else {
@@ -58,15 +51,12 @@ int resolve_possibilidades_de_matar_minotauro(int coluna) {
 		}
 	} else if (direcao == PARA_BAIXO) {
 		direcao = PARA_DIREITA;
-		if (!resolve_minotauro(coluna + 1)) {
+		if (!resolve_minotauro(linha, coluna + 1)) {
 			direcao = PARA_BAIXO;
-			linha = linha + 1;
-			if(!resolve_minotauro(coluna)) {
+			if(!resolve_minotauro(linha + 1, coluna)) {
 				direcao = PARA_ESQUERDA;
-				linha = linha - 1;
-				return resolve_minotauro(coluna - 1);
+				return resolve_minotauro(linha, coluna - 1);
 			} else {
-				linha = linha - 1;
 				return MATOU_O_MINOTAURO;
 			}
 		} else {
@@ -74,41 +64,24 @@ int resolve_possibilidades_de_matar_minotauro(int coluna) {
 		}
 	} else if (direcao == PARA_ESQUERDA) {
 		direcao = PARA_BAIXO;
-		linha = linha + 1;
-		if (!resolve_minotauro(coluna)) {
+		if (!resolve_minotauro(linha + 1, coluna)) {
 			direcao = PARA_ESQUERDA;
-			linha = linha - 1;
-			if (!resolve_minotauro(coluna - 1)) {
+			if (!resolve_minotauro(linha, coluna - 1)) {
 				direcao = PARA_CIMA;
-				linha = linha - 1;
-				if (resolve_minotauro(coluna)) {
-					linha = linha + 1;
-					return MATOU_O_MINOTAURO;
-				} else {
-					linha = linha + 1;
-					return PERDEU;
-				}
+				return resolve_minotauro(linha - 1, coluna);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
 		} else {
-			linha = linha - 1;
 			return MATOU_O_MINOTAURO;
 		}
 	} else {
 		direcao = PARA_DIREITA;
-		if (!resolve_minotauro(coluna + 1)) {
+		if (!resolve_minotauro(linha, coluna + 1)) {
 			direcao = PARA_ESQUERDA;
-			if (!resolve_minotauro(coluna - 1)) {
+			if (!resolve_minotauro(linha, coluna - 1)) {
 				direcao = PARA_CIMA;
-				linha = linha - 1;
-				if (resolve_minotauro(coluna)) {
-					linha = linha + 1;
-					return MATOU_O_MINOTAURO;
-				} else {
-					return PERDEU;
-				}
-				return resolve_minotauro(coluna);
+				return resolve_minotauro(linha - 1, coluna);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -144,7 +117,7 @@ void reinicializar_vetor_visitados() {
 	}
 }
 
-int resolve_minotauro(int coluna) {
+int resolve_minotauro(int linha, int coluna) {
 	if (linha >= m || coluna >= n || linha < 0 || coluna < 0) {
 		return PERDEU;
 	}
@@ -166,11 +139,12 @@ int resolve_minotauro(int coluna) {
 	
 	if (M[linha][coluna] == 'S') {
 		reinicializar_vetor_visitados();
+		posicao_visitada[linha][coluna] = 1;
 		conseguiu_espada = SIM;
-		return resolve_possibilidades_de_matar_minotauro(coluna);
+		return resolve_possibilidades_de_matar_minotauro(linha, coluna);
 	} 
 	
-	if (resolve_possibilidades_de_matar_minotauro(coluna)) {
+	if (resolve_possibilidades_de_matar_minotauro(linha, coluna)) {
 		M[linha][coluna] = '*';
 		return MATOU_O_MINOTAURO;
 	}
@@ -178,20 +152,17 @@ int resolve_minotauro(int coluna) {
 	return PERDEU;
 }
 
-int comecar_resolucao (int coluna) {
+int comecar_resolucao (int linha, int coluna) {
 	M[linha][coluna] = '*';
 	conseguiu_espada = NAO;
 	direcao = PARA_DIREITA;
-	if (!resolve_minotauro(coluna + 1)) {
+	if (!resolve_minotauro(linha, coluna + 1)) {
 		direcao = PARA_BAIXO;
-		linha = linha + 1;
-		if (!resolve_minotauro(coluna)) {
+		if (!resolve_minotauro(linha + 1, coluna)) {
 			direcao = PARA_ESQUERDA;
-			linha = linha - 1;
-			if (!resolve_minotauro(coluna - 1)) {
+			if (!resolve_minotauro(linha, coluna - 1)) {
 				direcao = PARA_CIMA;
-				linha = linha - 1;
-				return resolve_minotauro(coluna);
+				return resolve_minotauro(linha - 1, coluna);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -220,11 +191,11 @@ void destruir_matriz_mapa() {
 int main() {
 	scanf("%d %d", &m, &n);
 
-	char* linha_de_caracteres = malloc((n + 1) * sizeof(char)); //+1 para o caracter ('\0')
+	char* linha = malloc((n + 1) * sizeof(char)); //+1 para o caracter ('\0')
 
 	reinicializar_vetor_visitados();
 
-	M = malloc(m * sizeof(linha_de_caracteres));
+	M = malloc(m * sizeof(linha));
 
 	for (int i = 0; i < m; i++) {
 		scanf("%*c"); //descartar \n
@@ -232,17 +203,17 @@ int main() {
 		for (j = 0; j < n; j++) {
 			char caracter;
 			scanf("%c", &caracter);
-			linha_de_caracteres[j] = caracter;
+			linha[j] = caracter;
 		}
-		linha_de_caracteres[j] = '\0';
-		M[i] = linha_de_caracteres;
+		linha[j] = '\0';
+		M[i] = linha;
 
-		linha_de_caracteres = malloc((n + 1) * sizeof(char));
+		linha = malloc((n + 1) * sizeof(char));
 
 		//printf("%s", M[i]); //TODO - remover isso
 		// printf("\n"); //TODO - remover isso
 	}
-	free(linha_de_caracteres);
+	free(linha);
 
 	int x_entrada;
 
@@ -253,8 +224,7 @@ int main() {
 		}		
 	}
 	
-	linha = Y_ENTRADA + 1;
-	comecar_resolucao(x_entrada);
+	comecar_resolucao(Y_ENTRADA + 1, x_entrada);
 
 	imprimir_matriz();
 	destruir_matriz_mapa();
