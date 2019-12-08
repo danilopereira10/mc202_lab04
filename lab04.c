@@ -33,21 +33,16 @@ char direcao;
 int linha;
 //int coluna;
 
-int resolve_possibilidades_de_matar_minotauro(int coluna);
+int resolve_possibilidades_de_matar_minotauro(int linha, int coluna);
 int resolve_minotauro(int linha, int coluna);
 
-int resolve_possibilidades_de_matar_minotauro(int coluna) {
+int resolve_possibilidades_de_matar_minotauro(int linha, int coluna) {
 	if (direcao == PARA_DIREITA) {
 		if (!resolve_minotauro(linha, coluna + 1)) {
 			direcao = PARA_BAIXO;
-			linha = linha + 1;
-			if (!resolve_minotauro(coluna)) {
+			if (!resolve_minotauro(linha + 1, coluna)) {
 				direcao = PARA_CIMA;
-				linha = linha - 2;
-				if (resolve_minotauro(coluna)) {
-					return MATOU_O_MINOTAURO;
-				}
-				return resolve_minotauro(coluna);
+				return resolve_minotauro(linha - 1, coluna);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -56,13 +51,11 @@ int resolve_possibilidades_de_matar_minotauro(int coluna) {
 		}
 	} else if (direcao == PARA_BAIXO) {
 		direcao = PARA_DIREITA;
-		if (!resolve_minotauro(coluna + 1)) {
+		if (!resolve_minotauro(linha, coluna + 1)) {
 			direcao = PARA_BAIXO;
-			linha = linha + 1;
-			if(!resolve_minotauro(coluna)) {
+			if(!resolve_minotauro(linha + 1, coluna)) {
 				direcao = PARA_ESQUERDA;
-				linha = linha - 1;
-				return resolve_minotauro(coluna - 1);
+				return resolve_minotauro(linha, coluna - 1);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -71,14 +64,11 @@ int resolve_possibilidades_de_matar_minotauro(int coluna) {
 		}
 	} else if (direcao == PARA_ESQUERDA) {
 		direcao = PARA_BAIXO;
-		linha = linha + 1;
-		if (!resolve_minotauro(coluna)) {
+		if (!resolve_minotauro(linha + 1, coluna)) {
 			direcao = PARA_ESQUERDA;
-			linha = linha - 1;
-			if (!resolve_minotauro(coluna - 1)) {
+			if (!resolve_minotauro(linha, coluna - 1)) {
 				direcao = PARA_CIMA;
-				linha = linha - 1;
-				return resolve_minotauro(coluna);
+				return resolve_minotauro(linha - 1, coluna);
 			} else {
 				return MATOU_O_MINOTAURO;
 			}
@@ -91,7 +81,6 @@ int resolve_possibilidades_de_matar_minotauro(int coluna) {
 			direcao = PARA_ESQUERDA;
 			if (!resolve_minotauro(linha, coluna - 1)) {
 				direcao = PARA_CIMA;
-				linha = linha - 1;
 				return resolve_minotauro(linha - 1, coluna);
 			} else {
 				return MATOU_O_MINOTAURO;
